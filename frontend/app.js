@@ -1,7 +1,62 @@
 // Determine API Base URL
 const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
     ? 'http://localhost:8000/api/v1'
-    : '/api/v1';
+    : 'https://eco-sync-mvp.vercel.app/api/v1'; // Explicit Production URL
+
+// ...
+
+// FIX IMAGE DISPLAY (Line 374 approx)
+// In loadLostFoundItems:
+// ${item.photo_url ? `<img src="${item.photo_url.startsWith('http') ? item.photo_url : (API_BASE.replace('/api/v1','') + item.photo_url)}" ...` : ''}
+
+// Wait, API_BASE ending in /api/v1 might complicate image fetching if images are at /uploads.
+// Backend returns "/uploads/filename".
+// We need "https://site.com/uploads/filename" if served statically?
+// Or "https://site.com/api/v1/uploads..."? No static files are usually root or specific static dir.
+// My Vercel config maps /api/ to backend.
+// It maps / to frontend.
+// It does NOT map /uploads.
+// I need to serve /uploads via FastAPI or Vercel config.
+// Currently main.py mounts static: app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+// This means access is at `HOST/uploads/...` directly? Or `HOST/api/v1/uploads`?
+// main.py mount is on ROOT `app.mount`.
+// But Vercel routes `/api/*` to `main.py`.
+// If I request `https://site/api/uploads/xyz` -> `main.py` handles it.
+// `app.mount("/uploads")` -> URL is `/uploads`.
+// So inside Vercel, `main.py` sees path `/uploads`.
+// So the request should be `https://site/api/uploads/xyz`? 
+// The Vercel route strips `/api/`? No, usually passing full path.
+
+// Let's assume on Vercel:
+// Request: /api/uploads/file.jpg -> main.py -> app
+// app has route /uploads.
+// So usage: `${API_BASE.replace('/v1', '')}${item.photo_url}`
+// API_BASE = .../api/v1
+// item.photo_url = /uploads/file.jpg
+// Result: .../api/uploads/file.jpg. 
+
+// Let's update loadLostFoundItems to use this logic.
+async function loadLostFoundItems() {
+    try {
+        const response = await fetch(`${API_BASE}/lost-found/`);
+        const items = await response.json();
+        const container = document.getElementById('lostFoundList');
+
+        const baseUrl = API_BASE.replace('/api/v1', ''); // http://loc:8000 or https://site
+
+        container.innerHTML = items.map(item => `
+            <div class="grid-card">
+                 ${item.photo_url ? `<img src="${item.photo_url.startsWith('http') ? item.photo_url : (baseUrl + item.photo_url)}" alt="${item.item_name}" style="width:100%; height:150px; object-fit:cover; border-radius:8px;">` : ''}
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                     <span style="background:${item.type === 'lost' ? '#fee2e2' : '#d1fae5'}; color:${item.type === 'lost' ? '#b91c1c' : '#065f46'}; padding:2px 8px; border-radius:4px; font-size:0.8rem; font-weight:700; text-transform:uppercase;">${item.type}</span>
+                     <span style="font-size:0.8rem; color:#6b7280;">${new Date(item.created_at).toLocaleDateString()}</span>
+                </div>
+                <h4 style="margin-bottom:4px;">${item.item_name}</h4>
+                <p style="font-size:0.9rem; color:#4b5563;">${item.description || ''}</p>
+            </div>
+        `).join('');
+    } catch (err) { console.error(err); }
+}
 
 // --- VISUAL EFFECTS ---
 function triggerConfetti() {
@@ -369,9 +424,11 @@ async function loadLostFoundItems() {
         const items = await response.json();
         const container = document.getElementById('lostFoundList');
 
+        const baseUrl = API_BASE.replace('/api/v1', ''); // http://loc:8000 or https://site
+
         container.innerHTML = items.map(item => `
             <div class="grid-card">
-                ${item.photo_url ? `<img src="http://localhost:8000${item.photo_url}" alt="${item.item_name}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">` : ''}
+                 ${item.photo_url ? `<img src="${item.photo_url.startsWith('http') ? item.photo_url : (baseUrl + item.photo_url)}" alt="${item.item_name}" style="width:100%; height:150px; object-fit:cover; border-radius:8px;">` : ''}
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
                      <span style="background:${item.type === 'lost' ? '#fee2e2' : '#d1fae5'}; color:${item.type === 'lost' ? '#b91c1c' : '#065f46'}; padding:2px 8px; border-radius:4px; font-size:0.8rem; font-weight:700; text-transform:uppercase;">${item.type}</span>
                      <span style="font-size:0.8rem; color:#6b7280;">${new Date(item.created_at).toLocaleDateString()}</span>
