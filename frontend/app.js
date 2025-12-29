@@ -234,25 +234,29 @@ async function loginDemoUser() {
     finally { if (btn) { btn.disabled = false; btn.textContent = "🚀 Launch Demo Profile"; } }
 }
 // Demo Photo Logic
-async function useDemoPhoto() {
-    const btn = document.getElementById('demoPhotoBtn');
-    if (btn) { btn.disabled = true; btn.textContent = "Loading..."; }
+async function useDemoPhoto(type = 'laptop') {
+    const fileNameDisplay = document.getElementById('file-name');
+    if (fileNameDisplay) fileNameDisplay.textContent = "Loading sample image...";
+
+    const urls = {
+        'laptop': 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&q=80',
+        'book': 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500&q=80',
+        'calc': 'https://images.unsplash.com/photo-1574607383476-f517b260d35b?w=500&q=80'
+    };
 
     try {
-        // Fetch a sample image (Laptop)
-        const res = await fetch('https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&q=80');
+        // Fetch sample
+        const res = await fetch(urls[type]);
         const blob = await res.blob();
-        const file = new File([blob], "demo_laptop.jpg", { type: "image/jpeg" });
+        const file = new File([blob], `demo_${type}.jpg`, { type: "image/jpeg" });
 
         // Populate inputs
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
         document.getElementById('itemPhoto').files = dataTransfer.files;
-        document.getElementById('file-name').textContent = "Selected: demo_laptop.jpg (Sample)";
+        if (fileNameDisplay) fileNameDisplay.textContent = `Selected: demo_${type}.jpg (Ready to Analyze)`;
 
-        // Auto-submit? No, let user click "Analyze".
     } catch (e) { alert("Failed to load demo photo: " + e.message); }
-    finally { if (btn) { btn.disabled = false; btn.textContent = "🪄 Use Sample Photo"; } }
 }
 
 document.getElementById('uploadItemForm')?.addEventListener('submit', async (e) => {
@@ -435,4 +439,14 @@ window.fillBarter = function (cat, desc, emergency) {
     document.getElementById('wantCategory').value = cat;
     document.getElementById('description').value = desc;
     document.getElementById('isEmergency').checked = emergency;
+};
+
+window.selectReporter = function (namePartial) {
+    const select = document.getElementById('lostFoundUserId');
+    for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].text.includes(namePartial)) {
+            select.selectedIndex = i;
+            break;
+        }
+    }
 };

@@ -101,10 +101,18 @@
                         <p style="font-size: 0.85rem; color: #9ca3af; margin-top: 8px;">AI Analysis Enabled</p>
                         <input type="file" id="itemPhoto" accept="image/*" style="display: none;">
                     </div>
-                    <div style="text-align: center; margin-top: 8px;">
-                        <button type="button" id="demoPhotoBtn" onclick="useDemoPhoto()"
-                            style="background: none; border: 1px solid #e5e7eb; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; color: #6b7280; cursor: pointer;">🪄
-                            Use Sample Photo</button>
+                    <!-- Demo Photos -->
+                    <div
+                        style="text-align: center; margin-top: 8px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+                        <button type="button" onclick="useDemoPhoto('laptop')"
+                            style="background: #f1f5f9; border: 1px solid #cbd5e1; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; color: #475569; cursor: pointer;">💻
+                            Laptop</button>
+                        <button type="button" onclick="useDemoPhoto('book')"
+                            style="background: #f1f5f9; border: 1px solid #cbd5e1; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; color: #475569; cursor: pointer;">📕
+                            Book</button>
+                        <button type="button" onclick="useDemoPhoto('calc')"
+                            style="background: #f1f5f9; border: 1px solid #cbd5e1; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; color: #475569; cursor: pointer;">🧮
+                            Calc</button>
                     </div>
                     <div id="file-name"
                         style="text-align: center; margin: 12px 0; font-weight: 500; color: var(--primary);"></div>
@@ -199,6 +207,18 @@
                     <div class="form-group">
                         <label>Reporter Profile</label>
                         <select id="lostFoundUserId" required></select>
+                        <!-- Quick Select Reporters -->
+                        <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+                            <span onclick="selectReporter('Alice')"
+                                style="background: #e0f2fe; color: #0284c7; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; border: 1px solid #bae6fd;">👤
+                                Alice</span>
+                            <span onclick="selectReporter('Bob')"
+                                style="background: #dcfce7; color: #16a34a; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; border: 1px solid #bbf7d0;">👤
+                                Bob</span>
+                            <span onclick="selectReporter('Charlie')"
+                                style="background: #f3e8ff; color: #9333ea; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; border: 1px solid #e9d5ff;">👤
+                                Charlie</span>
+                        </div>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
