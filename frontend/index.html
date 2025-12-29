@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco-Sync | Enterprise Circular Economy Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <header>
+        <div class="logo-area">
+            <div style="font-size: 24px; margin-right: 8px;">♻️</div>
+            <div class="logo-text">ECO-SYNC <span
+                    style="font-weight: 300; opacity: 0.8; font-size: 0.8em;">ENTERPRISE</span></div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div id="headerProfile" style="display: none; color: white; font-weight: 500;">
+                <span id="headerName">User</span>
+            </div>
+            <button class="btn-primary" style="padding: 8px 16px; font-size: 0.85rem;" onclick="switchTab('auth')">Login
+                / Join</button>
+        </div>
+    </header>
+
+    <!-- Sticky Navigation -->
+    <nav class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('landing')">🏠 Dashboard</button>
+        <button class="tab-btn" onclick="switchTab('upload')">📸 Upload Item</button>
+        <button class="tab-btn" onclick="switchTab('barter')">🤝 Barter</button>
+        <button class="tab-btn" onclick="switchTab('matches')">⚡ Matches</button>
+        <button class="tab-btn" onclick="switchTab('lostfound')">🔍 Lost & Found</button>
+        <button class="tab-btn" onclick="switchTab('leaderboard')">🏆 Leaderboard</button>
+    </nav>
+
+    <div class="main-container">
+
+        <!-- Screen 1: Landing / Dashboard -->
+        <section id="landing" class="view-section active">
+            <div style="text-align: center; margin-bottom: 40px; color: white;">
+                <h1
+                    style="font-size: 2.5rem; font-weight: 700; margin-bottom: 16px; text-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    Circular Economy Management</h1>
+                <p style="font-size: 1.1rem; opacity: 0.9;">Optimize asset utilization through intelligent p2p swapping.
+                </p>
+            </div>
+
+            <div class="glass-panel" style="margin-bottom: 30px;">
+                <h3 class="section-title">Quick Actions</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                    <button class="btn-primary btn-secondary" onclick="switchTab('upload')">
+                        <span style="font-size: 1.5rem; display: block; margin-bottom: 8px;">📦</span>
+                        List Asset
+                    </button>
+                    <button class="btn-primary btn-secondary" onclick="switchTab('matches')">
+                        <span style="font-size: 1.5rem; display: block; margin-bottom: 8px;">🔄</span>
+                        View Proposals
+                    </button>
+                    <button class="btn-primary btn-secondary" onclick="switchTab('lostfound')">
+                        <span style="font-size: 1.5rem; display: block; margin-bottom: 8px;">📢</span>
+                        Report Lost Item
+                    </button>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                <div class="glass-panel">
+                    <h3>Your Impact</h3>
+                    <div style="display: flex; align-items: center; gap: 16px; margin-top: 16px;">
+                        <div style="font-size: 2rem; color: var(--primary);">0</div>
+                        <div>
+                            <div style="font-weight: 700;">Eco-Credits</div>
+                            <div style="font-size: 0.9rem; color: #6b7280;">Earned this month</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-panel">
+                    <h3>Network Status</h3>
+                    <div style="margin-top: 16px; color: var(--primary);">● System Operational</div>
+                    <div style="font-size: 0.9rem; color: #6b7280; margin-top: 4px;">Last sync: Just now</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen 2: Upload Item -->
+        <section id="upload" class="view-section">
+            <div class="glass-panel">
+                <h2 class="section-title">List New Asset</h2>
+                <form id="uploadItemForm">
+                    <div class="form-group">
+                        <label>Owner Profile</label>
+                        <select id="userSelectUpload" required></select>
+                    </div>
+
+                    <div class="upload-zone" onclick="document.getElementById('itemPhoto').click()">
+                        <div class="upload-icon">📸</div>
+                        <p style="font-weight: 500; color: #4b5563;">Click to upload asset photo</p>
+                        <p style="font-size: 0.85rem; color: #9ca3af; margin-top: 8px;">AI Analysis Enabled</p>
+                        <input type="file" id="itemPhoto" accept="image/*" style="display: none;">
+                    </div>
+                    <div id="file-name"
+                        style="text-align: center; margin: 12px 0; font-weight: 500; color: var(--primary);"></div>
+
+                    <button type="submit" class="btn-primary" id="uploadBtn">
+                        Analyze & List Asset
+                    </button>
+                </form>
+                <div id="uploadResponse" style="margin-top: 24px;"></div>
+            </div>
+        </section>
+
+        <!-- Screen 3: Barter Intent -->
+        <section id="barter" class="view-section">
+            <div class="glass-panel">
+                <h2 class="section-title">Initiate Trade</h2>
+                <form id="barterIntentForm">
+                    <div class="form-group">
+                        <label>Select Profile</label>
+                        <select id="userSelectBarter" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Asset to Trade</label>
+                        <select id="itemSelectBarter" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Desired Asset/Category</label>
+                        <input type="text" id="wantCategory" placeholder="e.g. Scientific Calculator, Textbook"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label>Requirements / Notes</label>
+                        <textarea id="description" rows="2" placeholder="Condition preferences..."></textarea>
+                    </div>
+                    <div class="form-group"
+                        style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #fff1f2; border-radius: 8px; border: 1px solid #fca5a5;">
+                        <input type="checkbox" id="isEmergency" style="width: 20px; height: 20px; box-shadow: none;">
+                        <label for="isEmergency" style="margin: 0; color: #b91c1c; font-weight: 600;">Priority Request
+                            (Emergency)</label>
+                    </div>
+                    <button type="submit" class="btn-primary">Find Matches</button>
+                </form>
+                <div id="barterResponse" style="margin-top: 24px;"></div>
+            </div>
+        </section>
+
+        <!-- Screen 4: Matches -->
+        <section id="matches" class="view-section">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; color: white;">
+                <h2 style="margin: 0;">Trade Proposals</h2>
+                <div style="display: flex; gap: 8px;">
+                    <select id="userSelectMatches" style="min-width: 200px;"></select>
+                    <button class="btn-primary" style="width: auto;" onclick="loadMatches()">Refresh</button>
+                </div>
+            </div>
+
+            <div id="matchesList">
+                <div
+                    style="text-align: center; padding: 60px; background: rgba(255,255,255,0.1); border-radius: 12px; color: white;">
+                    <p>Select a profile to view active trade proposals.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen 5: Lost & Found -->
+        <section id="lostfound" class="view-section">
+            <div class="glass-panel">
+                <h2 class="section-title">Lost & Found Registry</h2>
+                <form id="lostFoundForm">
+                    <div class="form-group">
+                        <label>Reporter Profile</label>
+                        <select id="lostFoundUserId" required></select>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label>Report Type</label>
+                            <select id="lostFoundType" required>
+                                <option value="lost">Lost Item</option>
+                                <option value="found">Found Item</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <input type="text" id="lostFoundCategory" placeholder="e.g. Electronics" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Item Name</label>
+                        <input type="text" id="lostFoundItemName" placeholder="e.g. Blue Umbrella" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="lostFoundDescription" rows="2"
+                            placeholder="Location, time, distinctive features..."></textarea>
+                    </div>
+
+                    <!-- NEW: Image Upload for Lost & Found -->
+                    <div class="form-group">
+                        <label>Reference Photo</label>
+                        <div class="upload-zone" style="padding: 24px;"
+                            onclick="document.getElementById('lostFoundPhoto').click()">
+                            <span style="font-size: 1.5rem;">📷</span>
+                            <span style="margin-left: 8px; color: #4b5563;">Upload Image</span>
+                            <input type="file" id="lostFoundPhoto" accept="image/*" style="display: none;">
+                        </div>
+                        <div id="lf-file-name"
+                            style="text-align: center; margin-top: 8px; color: var(--primary); font-size: 0.9rem;">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Submit Report</button>
+                </form>
+                <div id="lostFoundResponse" style="margin-top: 20px;"></div>
+
+                <h3 style="margin-top: 40px; margin-bottom: 20px; color: #1f2937;">Recent Reports</h3>
+                <div id="lostFoundList" class="items-grid"></div>
+            </div>
+        </section>
+
+        <!-- Screen 6: Leaderboard -->
+        <section id="leaderboard" class="view-section">
+            <div class="glass-panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h2 class="section-title">Community Leaderboard</h2>
+                    <button class="btn-primary" style="width: auto; font-size: 0.9rem; padding: 8px 16px;"
+                        onclick="loadLeaderboard()">Refresh</button>
+                </div>
+                <div id="leaderboardList"></div>
+            </div>
+        </section>
+
+        <!-- Screen 7: Authentication -->
+        <section id="auth" class="view-section">
+            <div class="glass-panel" style="max-width: 480px; margin: 40px auto;">
+                <div
+                    style="display: flex; gap: 16px; margin-bottom: 24px; border-bottom: 1px solid #e5e7eb; padding-bottom: 12px;">
+                    <button class="tab-btn active" id="tab-login" onclick="toggleAuth('login')">Login</button>
+                    <button class="tab-btn" id="tab-register" onclick="toggleAuth('register')">New Account</button>
+                </div>
+
+                <!-- LOGIN FORM -->
+                <form id="loginForm">
+                    <h2 class="section-title" style="margin-bottom: 8px;">Welcome Back</h2>
+                    <p style="color: #6b7280; margin-bottom: 24px;">Access your enterprise dashboard.</p>
+
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="loginEmail" placeholder="alice@corp.com" required>
+                    </div>
+                    <button type="submit" class="btn-primary" id="loginBtn">Secure Login</button>
+                    <div id="loginResponse" style="margin-top: 16px;"></div>
+                </form>
+
+                <!-- REGISTER FORM (Hidden by default) -->
+                <form id="registerForm" style="display: none;">
+                    <h2 class="section-title">Partner Registration</h2>
+                    <div class="form-group">
+                        <label>Organization / Name</label>
+                        <input type="text" id="fullName" placeholder="Alice Logistics" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="email" placeholder="alice@corp.com" required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label>Tier/Level</label>
+                            <input type="number" id="semester" value="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Department</label>
+                            <input type="text" id="department" placeholder="Logistics" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Location Code</label>
+                        <input type="text" id="hostel" placeholder="Block A" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Create Profile</button>
+                    <div id="registerResponse" style="margin-top: 16px;"></div>
+                </form>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            if (tabId === 'lostfound') loadLostFoundItems();
+            if (tabId === 'leaderboard') loadLeaderboard();
+        }
+
+        // File Input Feedback
+        document.getElementById('itemPhoto').addEventListener('change', function (e) {
+            if (e.target.files[0]) document.getElementById('file-name').textContent = "Selected: " + e.target.files[0].name;
+        });
+        document.getElementById('lostFoundPhoto').addEventListener('change', function (e) {
+            if (e.target.files[0]) document.getElementById('lf-file-name').textContent = "Selected: " + e.target.files[0].name;
+        });
+
+        // Tab Activation Fix
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1 @@
+# Eco-Sync Backend Application
