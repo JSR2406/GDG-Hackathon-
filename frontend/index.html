@@ -101,6 +101,11 @@
                         <p style="font-size: 0.85rem; color: #9ca3af; margin-top: 8px;">AI Analysis Enabled</p>
                         <input type="file" id="itemPhoto" accept="image/*" style="display: none;">
                     </div>
+                    <div style="text-align: center; margin-top: 8px;">
+                        <button type="button" id="demoPhotoBtn" onclick="useDemoPhoto()"
+                            style="background: none; border: 1px solid #e5e7eb; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; color: #6b7280; cursor: pointer;">🪄
+                            Use Sample Photo</button>
+                    </div>
                     <div id="file-name"
                         style="text-align: center; margin: 12px 0; font-weight: 500; color: var(--primary);"></div>
 
@@ -139,6 +144,27 @@
                         <input type="checkbox" id="isEmergency" style="width: 20px; height: 20px; box-shadow: none;">
                         <label for="isEmergency" style="margin: 0; color: #b91c1c; font-weight: 600;">Priority Request
                             (Emergency)</label>
+                    </div>
+
+                    <!-- Barter Quick Fill -->
+                    <div
+                        style="background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 24px; border: 1px dashed #cbd5e1;">
+                        <span
+                            style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">Quick
+                            Fill:</span>
+                        <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+                            <button type="button" onclick="fillBarter('Textbook', 'Need Biology 101 for exam', true)"
+                                style="font-size: 0.75rem; padding: 4px 8px; background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; border-radius: 12px; cursor: pointer;">📕
+                                Need Book (Urgent)</button>
+                            <button type="button"
+                                onclick="fillBarter('Electronics', 'Any scientific calculator', false)"
+                                style="font-size: 0.75rem; padding: 4px 8px; background: #e0f2fe; color: #0284c7; border: 1px solid #7dd3fc; border-radius: 12px; cursor: pointer;">🧮
+                                Want Calc</button>
+                            <button type="button"
+                                onclick="fillBarter('Dorm Essentials', 'Desk lamp or study light', false)"
+                                style="font-size: 0.75rem; padding: 4px 8px; background: #ffedd5; color: #c2410c; border: 1px solid #fdba74; border-radius: 12px; cursor: pointer;">💡
+                                Want Lamp</button>
+                        </div>
                     </div>
                     <button type="submit" class="btn-primary">Find Matches</button>
                 </form>
@@ -194,6 +220,28 @@
                         <input type="text" id="lostFoundItemName" placeholder="e.g. Blue Umbrella" required>
                     </div>
 
+                    <!-- Quick Fill Scenarios -->
+                    <div
+                        style="background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 16px; border: 1px dashed #cbd5e1;">
+                        <span
+                            style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">Demo
+                            Cases:</span>
+                        <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+                            <button type="button"
+                                onclick="fillLF('lost', 'Blue Umbrella', 'Accessories', 'Left at cafeteria table 4 during lunch.')"
+                                style="font-size: 0.75rem; padding: 4px 8px; background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; border-radius: 12px; cursor: pointer;">☂️
+                                Lost Umbrella</button>
+                            <button type="button"
+                                onclick="fillLF('found', 'Casio Calculator', 'Electronics', 'Found in Library quiet zone on floor.')"
+                                style="font-size: 0.75rem; padding: 4px 8px; background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; border-radius: 12px; cursor: pointer;">🧮
+                                Found Calc</button>
+                            <button type="button"
+                                onclick="fillLF('lost', 'ID Card (J. Smith)', 'Documents', 'Lost near Block A entrance. Lanyard is red.')"
+                                style="font-size: 0.75rem; padding: 4px 8px; background: #fae8ff; color: #86198f; border: 1px solid #f0abfc; border-radius: 12px; cursor: pointer;">🆔
+                                Lost ID</button>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label>Description</label>
                         <textarea id="lostFoundDescription" rows="2"
@@ -244,6 +292,16 @@
                     <button class="tab-btn" id="tab-register" onclick="toggleAuth('register')">New Account</button>
                 </div>
 
+                <!-- DEMO SHORTCUT -->
+                <div style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px dashed #e5e7eb;">
+                    <button id="demoLoginBtn" onclick="loginDemoUser()"
+                        style="width: 100%; background: #0f172a; color: white; padding: 12px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <span>🚀</span> Launch Demo Profile
+                    </button>
+                    <p style="text-align: center; color: #64748b; font-size: 0.8rem; margin-top: 8px;">Instantly create
+                        & login as 'Demo Creator'</p>
+                </div>
+
                 <!-- LOGIN FORM -->
                 <form id="loginForm">
                     <h2 class="section-title" style="margin-bottom: 8px;">Welcome Back</h2>
@@ -252,6 +310,18 @@
                     <div class="form-group">
                         <label>Email Address</label>
                         <input type="email" id="loginEmail" placeholder="alice@corp.com" required>
+                    </div>
+                    <!-- Quick Login Options -->
+                    <div style="display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;">
+                        <span onclick="document.getElementById('loginEmail').value='alice@corp.com'"
+                            style="background: #e0f2fe; color: #0284c7; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; border: 1px solid #bae6fd;">Alice
+                            (Logistics)</span>
+                        <span onclick="document.getElementById('loginEmail').value='bob@tech.com'"
+                            style="background: #dcfce7; color: #16a34a; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; border: 1px solid #bbf7d0;">Bob
+                            (IT)</span>
+                        <span onclick="document.getElementById('loginEmail').value='charlie@sales.com'"
+                            style="background: #f3e8ff; color: #9333ea; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; border: 1px solid #e9d5ff;">Charlie
+                            (Sales)</span>
                     </div>
                     <button type="submit" class="btn-primary" id="loginBtn">Secure Login</button>
                     <div id="loginResponse" style="margin-top: 16px;"></div>

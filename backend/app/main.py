@@ -2,7 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.routers import users, items, barter, matches, lost_found, eco_credits
+from app.database import engine, Base
 import os
+
+# Create Tables on Startup (Essential for Vercel/Mock DB)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="🌍 Eco-Sync API",

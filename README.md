@@ -70,7 +70,10 @@ cd frontend
 python -m http.server 3000
 ```
 
-Frontend will run at: `http://localhost:3000`
+### Live Demo & Code
+- **Live Demo**: [https://eco-sync-mvp.vercel.app](https://eco-sync-mvp.vercel.app)
+- **Repository**: [https://github.com/JSR2406/GDG-Hackathon-](https://github.com/JSR2406/GDG-Hackathon-)
+- **Design**: [Figma Prototype](https://wool-night-00859449.figma.site/)
 
 ---
 

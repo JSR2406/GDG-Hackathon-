@@ -88,15 +88,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function populateUserSelects() {
     try {
-        const response = await fetch(`${API_BASE}/users/`);
+        let response = await fetch(`${API_BASE}/users/`);
         if (!response.ok) throw new Error('Failed to fetch users');
-        const users = await response.json();
+        let users = await response.json();
+
+        // AUTO-SEED if empty (for Vercel Demo)
+        if (users.length === 0) {
+            console.log("Empty DB detected. Seeding Demo Users...");
+            const demoUsers = [
+                { name: "Alice Logistics", email: "alice@corp.com", semester: 1, department: "Logistics", hostel: "Block A" },
+                { name: "Bob IT Solutions", email: "bob@tech.com", semester: 2, department: "IT", hostel: "Block B" },
+                { name: "Charlie Sales", email: "charlie@sales.com", semester: 3, department: "Sales", hostel: "Block C" }
+            ];
+
+            await Promise.all(demoUsers.map(u =>
+                fetch(`${API_BASE}/users/`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(u) })
+            ));
+
+            // Re-fetch
+            response = await fetch(`${API_BASE}/users/`);
+            users = await response.json();
+        }
 
         const selects = ['userSelectUpload', 'userSelectBarter', 'userSelectMatches', 'lostFoundUserId'];
         selects.forEach(selectId => {
             const select = document.getElementById(selectId);
             if (!select) return;
-            select.innerHTML = '<option value="">Select Profile</option>';
+            select.innerHTML = '<option value="">Select Profile (Demo)</option>';
             users.forEach(user => {
                 const option = document.createElement('option');
                 option.value = user.id;
@@ -173,7 +191,70 @@ document.getElementById('registerForm')?.addEventListener('submit', async (e) =>
     } catch (err) { console.error(err); }
 });
 
-// Upload Item
+// Demo User Handler
+async function loginDemoUser() {
+    const btn = document.getElementById('demoLoginBtn');
+    if (btn) { btn.disabled = true; btn.textContent = "Setting up Demo..."; }
+
+    const demoUser = {
+        name: "Demo Creator",
+        email: "demo@ecosync.com",
+        semester: 4,
+        department: "Product",
+        hostel: "Innovation Lab"
+    };
+
+    try {
+        // Try creating (or getting if exists)
+        let res = await fetch(`${API_BASE}/users/`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(demoUser)
+        });
+
+        // If 400, it exists. Fetch all users to find ID.
+        if (res.status === 400) {
+            const all = await (await fetch(`${API_BASE}/users/`)).json();
+            const found = all.find(u => u.email === demoUser.email);
+            if (found) {
+                triggerConfetti();
+                updateAuthState(found);
+                setTimeout(() => switchTab('landing'), 500);
+                return;
+            }
+        }
+
+        if (res.ok) {
+            const user = await res.json();
+            triggerConfetti();
+            updateAuthState(user);
+            setTimeout(() => switchTab('landing'), 500);
+        } else {
+            alert("Demo Login Failed: " + res.statusText);
+        }
+    } catch (e) { console.error(e); alert("Error: " + e.message); }
+    finally { if (btn) { btn.disabled = false; btn.textContent = "🚀 Launch Demo Profile"; } }
+}
+// Demo Photo Logic
+async function useDemoPhoto() {
+    const btn = document.getElementById('demoPhotoBtn');
+    if (btn) { btn.disabled = true; btn.textContent = "Loading..."; }
+
+    try {
+        // Fetch a sample image (Laptop)
+        const res = await fetch('https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&q=80');
+        const blob = await res.blob();
+        const file = new File([blob], "demo_laptop.jpg", { type: "image/jpeg" });
+
+        // Populate inputs
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        document.getElementById('itemPhoto').files = dataTransfer.files;
+        document.getElementById('file-name').textContent = "Selected: demo_laptop.jpg (Sample)";
+
+        // Auto-submit? No, let user click "Analyze".
+    } catch (e) { alert("Failed to load demo photo: " + e.message); }
+    finally { if (btn) { btn.disabled = false; btn.textContent = "🪄 Use Sample Photo"; } }
+}
+
 document.getElementById('uploadItemForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const userId = document.getElementById('userSelectUpload').value;
@@ -341,3 +422,17 @@ async function loadLeaderboard() {
         </div>
     `).join('');
 }
+
+// --- TEST HELPERS ---
+window.fillLF = function (type, item, cat, desc) {
+    document.getElementById('lostFoundType').value = type;
+    document.getElementById('lostFoundItemName').value = item;
+    document.getElementById('lostFoundCategory').value = cat;
+    document.getElementById('lostFoundDescription').value = desc;
+};
+
+window.fillBarter = function (cat, desc, emergency) {
+    document.getElementById('wantCategory').value = cat;
+    document.getElementById('description').value = desc;
+    document.getElementById('isEmergency').checked = emergency;
+};

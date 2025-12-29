@@ -6,7 +6,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./eco_sync.db")
+DB_PATH = "sqlite:///./eco_sync.db"
+# Vercel / Linux writable path check
+if os.path.exists("/tmp"):
+    DB_PATH = "sqlite:////tmp/eco_sync.db"
+
+DATABASE_URL = os.getenv("DATABASE_URL", DB_PATH)
 
 engine = create_engine(
     DATABASE_URL,

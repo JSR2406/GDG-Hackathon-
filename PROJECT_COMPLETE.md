@@ -171,6 +171,10 @@ Frontend: http://localhost:3000
 ### Opening (30 seconds)
 "Eco-Sync is an AI-driven autonomous barter agent that transforms campus waste into a circular economy. Every semester, students discard perfectly reusable items—drafters, lab coats, textbooks. We solve this with intelligent multi-party swap orchestration."
 
+- **Live Demo (Vercel)**: [https://eco-sync-mvp.vercel.app](https://eco-sync-mvp.vercel.app)
+- **GitHub Repository**: [https://github.com/JSR2406/GDG-Hackathon-](https://github.com/JSR2406/GDG-Hackathon-)
+- **Figma Design**: [https://wool-night-00859449.figma.site/](https://wool-night-00859449.figma.site/)
+
 ### Live Demo (3 minutes)
 
 **1. Show API Documentation (30s)**
